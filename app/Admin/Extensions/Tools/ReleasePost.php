@@ -13,6 +13,19 @@ class ReleasePost extends BatchAction
         $this->action = $action;
     }
     
+
+    public function form()
+{
+    $type = [
+        1 => 'Advertising',
+        2 => 'Illegal',
+        3 => 'Fishing',
+    ];
+    
+    $this->checkbox('type', 'type')->options($type);
+    $this->textarea('reason', 'reason')->rules('required');
+}
+
     public function script()
     {
         return <<<EOT

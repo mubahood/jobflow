@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Post\BatchReplicate;
 use App\Models\Candidate;
 use App\Models\Location;
 use App\Models\Utils;
@@ -27,8 +28,9 @@ class CandidateController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Candidate());
+
         $grid->disableCreation();
-        $grid->disableBatchActions();
+        //$grid->disableBatchActions();
         $grid->quickSearch('name')->placeholder('Search by name');
 
         $grid->column('id', __('ID'))->sortable();
@@ -334,10 +336,21 @@ class CandidateController extends AdminController
 
 
         $form->divider();
-        $form->select('stage', __('Stage'))
-            ->options([
-                'Musaned' => 'Musaned'
-            ])->default('Medication')->rules('required');
+        if ($form->isEditing()) {
+            $form->select('stage', __('Stage'))
+                ->options([
+                    'Musaned' => 'Musaned',
+                    'Interpol' => 'Interpol'
+                ])->rules('required');
+        } else {
+            $form->select('stage', __('Stage'))
+                ->options([
+                    'Musaned' => 'Musaned'
+                ])->default('Medication')->rules('required');
+        }
+
+
+
         $form->select('destination_country', __('Destination country'))->options([
             'Saudi Arabia' => 'Saudi Arabia',
             'Dubai' => 'Dubai',

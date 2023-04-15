@@ -129,22 +129,19 @@ class InterpolController extends AdminController
         $grid->column('registration_fee', __('Registration fee'))->hide();
         $grid->column('account', __('Account'))->hide();
         $grid->column('destination_country', __('Destination country'))->sortable();
-        $grid->column('job_type', __('Job type'));
+        $grid->column('job_type', __('Job type'))->hide();
         $grid->column('has_paid', __('Has paid'))->filter([
             'Yes' => 'Yes',
             'No' => 'No',
         ])->hide();
         $grid->column('stage', __('Stage'))->sortable();
 
-
-
-
         $grid->column('medical_hospital', __('Medical hospital'))->hide();
         $grid->column('medical_date', __('Medical date'))->hide();
         $grid->column('medical_status', __('Medical status'))->hide();
         $grid->column('musaned_status', __('Musaned status'))->hide();
         $grid->column('failed_reason', __('Failed reason'))->hide();
-        $grid->column('interpal_appointment_date', __('Interpal appointment date'))->hide();
+        $grid->column('interpal_appointment_date', __('Interpal Appointment Date'))->sortable();
         $grid->column('interpal_done', __('Interpal done'))->hide();
         $grid->column('interpal_status', __('Interpal status'))->hide();
         $grid->column('cv_sharing', __('Cv sharing'))->hide();

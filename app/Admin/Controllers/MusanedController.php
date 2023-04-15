@@ -2,6 +2,8 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Post\FailedBatch;
+use App\Admin\Actions\Post\InterpolSumitted;
 use App\Models\Candidate;
 use App\Models\Location;
 use App\Models\Utils;
@@ -27,8 +29,12 @@ class MusanedController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Candidate());
-        $grid->disableCreation();
-        $grid->disableBatchActions();
+
+        $grid->batchActions(function ($batch) {
+            $batch->add(new InterpolSumitted());
+            $batch->add(new FailedBatch);
+        });
+
         $grid->quickSearch('name')->placeholder('Search by name');
 
         $grid->model()
@@ -258,11 +264,11 @@ class MusanedController extends AdminController
     {
         $form = new Form(new Candidate());
 
-        $form->radio('musaned_status', __('Does this candidate have passport?'))
+        $form->radio('musaned_status', __('Has this candidate been submited to Musaned?'))
             ->options([
-                'Passed' => 'Passed',
-                'Failed' => 'Failed',
-            ])->when('Passed', function ($form) {
+                'Yes' => 'Yes',
+                'No' => 'No',
+            ])->when('Yes', function ($form) {
                 $form->select('stage', __('Next Stage'))
                     ->options([
                         'Interpol' => 'Interpol'
@@ -270,11 +276,11 @@ class MusanedController extends AdminController
                 $form->date('interpal_appointment_date', __('Interpol appointment date'))
                     ->rules('required');
             })
-            ->when('Failed', function ($form) {
+            ->when('No', function ($form) {
                 $form->text('failed_reason', __('Reason failure'))
                     ->rules('required');
             })
-            ->rules('required');
+            ->rules('required'); 
 
 
         return $form;
