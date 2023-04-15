@@ -32,7 +32,11 @@ class CandidateController extends AdminController
         $grid->quickSearch('name')->placeholder('Search by name');
 
         $grid->column('id', __('ID'))->sortable();
-        $grid->column('created_at', __('Registered'))->sortable();
+        $grid->column('created_at', __('Registered'))
+            ->display(function ($x) {
+                return Utils::my_date_1($x);
+            })->hide()
+            ->sortable();
 
         $grid->column('photo', __('Photo'))
             ->display(function ($avatar) {
