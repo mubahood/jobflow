@@ -28,8 +28,13 @@ class CandidateController extends AdminController
     {
         $grid = new Grid(new Candidate());
         $grid->disableCreation();
+        $grid->disableBatchActions();
+        $grid->quickSearch('name')->placeholder('Search by name');
 
-        $grid->column('avatar', __('Photo'))
+        $grid->column('id', __('ID'))->sortable();
+        $grid->column('created_at', __('Registered'))->sortable();
+
+        $grid->column('photo', __('Photo'))
             ->display(function ($avatar) {
                 $img = url("storage/" . $avatar);
                 $link = admin_url('members/' . $this->id);
@@ -37,76 +42,111 @@ class CandidateController extends AdminController
             })
             ->width(80)
             ->sortable();
-        $grid->column('id', __('ID'))->sortable();
-        $grid->column('created_at', __('Registered'))->sortable();
+        $grid->column('full_photo', __('full photo'))
+            ->display(function ($avatar) {
+                $img = url("storage/" . $avatar);
+                $link = admin_url('members/' . $this->id);
+                return '<a href=' . $link . ' title="View profile"><img class="img-fluid " style="border-radius: 10px;"  src="' . $img . '" ></a>';
+            })
+            ->width(80)
+            ->hide()
+            ->sortable();
         $grid->column('name', __('Name'))->sortable();
         $grid->column('first_name', __('First name'))->hide();
         $grid->column('middle_name', __('Middle name'))->hide();
-        $grid->column('sex', __('Sex'))->sortable();
+        $grid->column('sex', __('Sex'))->filter([
+            'Male' => 'Male',
+            'Female' => 'Female',
+        ])->sortable();
         $grid->column('last_name', __('Last name'))->hide();
         $grid->column('dob', __('D.O.B'))->display(function ($x) {
             return Utils::my_date_1($x);
-        })->sortable();
+        })->hide();
         $grid->column('phone_number', __('Phone number'));
-        $grid->column('email', __('Email'));
-        $grid->column('district_id', __('District id'));
-        $grid->column('subcounty_id', __('Subcounty id'));
-        $grid->column('village', __('Village'));
-        $grid->column('address', __('Address'));
-        $grid->column('phone_number_2', __('Phone number 2'));
-        $grid->column('weight', __('Weight'));
-        $grid->column('height', __('Height'));
-        $grid->column('religion', __('Religion'));
+        $grid->column('email', __('Email'))->hide();
+        $grid->column('district_id', __('District id'))->hide();
+        $grid->column('subcounty_id', __('Subcounty'))
+            ->display(function ($x) {
+                if ($this->sub == null) {
+                    return $x;
+                }
+                return $this->sub->name_text;
+            })->sortable();
+        $grid->column('nin', __('NIN'))->hide();
+        $grid->column('village', __('Village'))->hide();
+        $grid->column('address', __('Address'))->hide();
+        $grid->column('phone_number_2', __('Phone number 2'))->hide();
+        $grid->column('weight', __('Weight'))->hide();
+        $grid->column('height', __('Height'))->hide();
+        $grid->column('religion', __('Religion'))->hide();
         $grid->column('agent', __('Agent'));
-        $grid->column('nin', __('Nin'));
-        $grid->column('has_passport', __('Has passport'));
-        $grid->column('passport_number', __('Passport number'));
-        $grid->column('passport_issue_date', __('Passport issue date'));
-        $grid->column('passport_expiry', __('Passport expiry'));
-        $grid->column('photo', __('Photo'));
-        $grid->column('education_level', __('Education level'));
-        $grid->column('skills', __('Skills'));
-        $grid->column('parent_farther_name', __('Parent farther name'));
-        $grid->column('parent_farther_contact', __('Parent farther contact'));
-        $grid->column('parent_farther_address', __('Parent farther address'));
-        $grid->column('parent_mother_name', __('Parent mother name'));
-        $grid->column('parent_mother_contact', __('Parent mother contact'));
-        $grid->column('parent_mother_address', __('Parent mother address'));
-        $grid->column('next_of_kin_releationship', __('Next of kin releationship'));
-        $grid->column('next_of_kin_name', __('Next of kin name'));
-        $grid->column('next_of_kin_contact', __('Next of kin contact'));
-        $grid->column('next_of_kin_address', __('Next of kin address'));
-        $grid->column('passport_copy', __('Passport copy'));
-        $grid->column('full_photo', __('Full photo'));
-        $grid->column('stage', __('Stage'));
-        $grid->column('destination_country', __('Destination country'));
-        $grid->column('job_type', __('Job type'));
+        $grid->column('has_passport', __('Has Passport'))
+            ->filter([
+                'Yes' => 'Yes',
+                'No' => 'No',
+            ])->sortable();
+        $grid->column('passport_number', __('Passport number'))->hide();
+        $grid->column('passport_issue_date', __('Passport issue date'))->sortable();
+        $grid->column('passport_expiry', __('Passport expiry'))->hide()->sortable();
+        $grid->column('education_level', __('Education level'))->hide()->sortable();
+        $grid->column('skills', __('Skills'))->hide();
+        $grid->column('parent_farther_name', __('Father name'))->hide();
+        $grid->column('parent_farther_contact', __('Father contact'))->hide();
+        $grid->column('parent_farther_address', __('Parent father address'))->hide();
+        $grid->column('parent_mother_name', __('Mother name'))->hide();
+        $grid->column('parent_mother_contact', __('Mother contact'))->hide();
+        $grid->column('parent_mother_address', __('Mother address'))->hide();
+        $grid->column('next_of_kin_releationship', __('Next of kin releationship'))->hide();
+        $grid->column('next_of_kin_name', __('Next of kin name'))->hide();
+        $grid->column('next_of_kin_contact', __('Next of kin contact'))->hide();
+        $grid->column('next_of_kin_address', __('Next of kin address'))->hide();
+
+        $grid->column('passport_copy', __('Passport copy'))
+            ->display(function ($avatar) {
+                $img = url("storage/" . $avatar);
+                $link = admin_url('members/' . $this->id);
+                return '<a href=' . $link . ' title="View profile"><img class="img-fluid " style="border-radius: 10px;"  src="' . $img . '" ></a>';
+            })
+            ->hide()
+            ->width(80)
+            ->sortable();
+
         $grid->column('registration_fee', __('Registration fee'));
-        $grid->column('has_paid', __('Has paid'));
-        $grid->column('account', __('Account'));
-        $grid->column('medical_hospital', __('Medical hospital'));
-        $grid->column('medical_date', __('Medical date'));
-        $grid->column('medical_status', __('Medical status'));
-        $grid->column('musaned_status', __('Musaned status'));
-        $grid->column('failed_reason', __('Failed reason'));
-        $grid->column('interpal_appointment_date', __('Interpal appointment date'));
-        $grid->column('interpal_done', __('Interpal done'));
-        $grid->column('interpal_status', __('Interpal status'));
-        $grid->column('cv_sharing', __('Cv sharing'));
-        $grid->column('cv_shared_with_partners', __('Cv shared with partners'));
-        $grid->column('emis_upload', __('Emis upload'));
-        $grid->column('on_training', __('On training'));
-        $grid->column('training_start_date', __('Training start date'));
-        $grid->column('training_end_date', __('Training end date'));
-        $grid->column('ministry_aproval', __('Ministry aproval'));
-        $grid->column('enjaz_applied', __('Enjaz applied'));
-        $grid->column('enjaz_status', __('Enjaz status'));
-        $grid->column('embasy_submited', __('Embasy submited'));
-        $grid->column('embasy_date_submited', __('Embasy date submited'));
-        $grid->column('embasy_status', __('Embasy status'));
-        $grid->column('depature_status', __('Depature status'));
-        $grid->column('depature_date', __('Depature date'));
-        $grid->column('depature_comment', __('Depature comment'));
+        $grid->column('account', __('Account'))->hide();
+        $grid->column('destination_country', __('Destination country'))->sortable();
+        $grid->column('job_type', __('Job type'));
+        $grid->column('has_paid', __('Has paid'))->filter([
+            'Yes' => 'Yes',
+            'No' => 'No',
+        ])->sortable();
+        $grid->column('stage', __('Stage'))->sortable();
+
+
+
+
+        $grid->column('medical_hospital', __('Medical hospital'))->hide();
+        $grid->column('medical_date', __('Medical date'))->hide();
+        $grid->column('medical_status', __('Medical status'))->hide();
+        $grid->column('musaned_status', __('Musaned status'))->hide();
+        $grid->column('failed_reason', __('Failed reason'))->hide();
+        $grid->column('interpal_appointment_date', __('Interpal appointment date'))->hide();
+        $grid->column('interpal_done', __('Interpal done'))->hide();
+        $grid->column('interpal_status', __('Interpal status'))->hide();
+        $grid->column('cv_sharing', __('Cv sharing'))->hide();
+        $grid->column('cv_shared_with_partners', __('Cv shared with partners'))->hide();
+        $grid->column('emis_upload', __('Emis upload'))->hide();
+        $grid->column('on_training', __('On training'))->hide();
+        $grid->column('training_start_date', __('Training start date'))->hide();
+        $grid->column('training_end_date', __('Training end date'))->hide();
+        $grid->column('ministry_aproval', __('Ministry aproval'))->hide();
+        $grid->column('enjaz_applied', __('Enjaz applied'))->hide();
+        $grid->column('enjaz_status', __('Enjaz status'))->hide();
+        $grid->column('embasy_submited', __('Embasy submited'))->hide();
+        $grid->column('embasy_date_submited', __('Embasy date submited'))->hide();
+        $grid->column('embasy_status', __('Embasy status'))->hide();
+        $grid->column('depature_status', __('Depature status'))->hide();
+        $grid->column('depature_date', __('Depature date'))->hide();
+        $grid->column('depature_comment', __('Depature comment'))->hide();
 
         return $grid;
     }
@@ -203,7 +243,7 @@ class CandidateController extends AdminController
     {
         $form = new Form(new Candidate());
 
-        $form->image('photo', __('Candidate\'s passport size Photo'))->rules('required');
+        $form->image('photo', __('Candidate\'s passport size Photo'));
         $form->image('full_photo', __('Candidate\'s Full photo'));
         $form->text('first_name', __('First name'))->rules('required');
         $form->text('middle_name', __('Middle name'));
@@ -273,7 +313,7 @@ class CandidateController extends AdminController
         ])->rules('required');
 
         $form->text('parent_farther_name', __("Father's name"));
-        $form->text('parent_farther_contact', __("Father's name"));
+        $form->text('parent_farther_contact', __("Father's contact"));
         $form->text('parent_farther_address', __("Father's address"));
         $form->text('parent_mother_name', __("Mother's name"));
         $form->text('parent_mother_contact', __("Mother's contact"));
