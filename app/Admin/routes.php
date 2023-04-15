@@ -15,6 +15,7 @@ Route::group([
 
 
     /* ========================START OF NEW THINGS===========================*/
+    $router->resource('candidates', CandidateController::class); 
 
     $router->resource('crops', CropController::class);
     $router->resource('crop-protocols', CropProtocolController::class);

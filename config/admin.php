@@ -11,7 +11,7 @@ return [
     | login page.
     |
     */
-    'name' => 'MaRCCI - Admin',
+    'name' => 'JobFlow - Admin',
 
     /*
     |--------------------------------------------------------------------------
@@ -22,7 +22,7 @@ return [
     | `img` tag, eg '<img src="http://logo-url" alt="Admin logo">'.
     |
     */
-    'logo' => '<b>MaRCCI</b> admin',
+    'logo' => '<b>JobFlow</b> admin',
 
     /*
     |--------------------------------------------------------------------------
@@ -34,7 +34,7 @@ return [
     | '<img src="http://logo-url" alt="Admin logo">'.
     |
     */
-    'logo-mini' => '<b>MaRCCI</b>',
+    'logo-mini' => '<b>JobFlow</b>',
 
     /*
     |--------------------------------------------------------------------------

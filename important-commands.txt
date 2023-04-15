@@ -46,6 +46,7 @@ php artisan make:migration create_product_orders_table
 php artisan make:migration create_crop_protocols_table 
 php artisan make:migration create_garden_table 
 php artisan make:migration create_garden_activities_table 
+php artisan make:migration create_candidates_table
 
 Encore\Admin\Auth\Database\Administrator::class,
 php artisan admin:make FormSr4Controller --model=App\FormSr4
@@ -77,6 +78,7 @@ php artisan admin:make CropController --model=App\Models\Crop
 php artisan admin:make CropProtocolController --model=App\Models\CropProtocol
 php artisan admin:make GardenController --model=App\Models\Garden
 php artisan admin:make GardenActivityController --model=App\Models\GardenActivity
+php artisan admin:make CandidateController --model=App\Models\Candidate
 
 php artisan make:factory TeacherFactory
 
@@ -120,4 +122,5 @@ php artisan make:model ProductOrder
 php artisan make:model Crop
 php artisan make:model Garden
 php artisan make:model GardenActivity
+php artisan make:model Candidate
 
