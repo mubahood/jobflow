@@ -23,6 +23,7 @@ use Encore\Admin\Facades\Admin;
 use Illuminate\Support\Facades\Auth;
 use App\Admin\Extensions\Nav\Shortcut;
 use App\Admin\Extensions\Nav\Dropdown;
+use Encore\Admin\Form;
 
 Utils::system_boot();
 
@@ -65,6 +66,18 @@ Admin::navbar(function (\Encore\Admin\Widgets\Navbar $navbar) {
 });
 
 
+Form::init(function (Form $form) {
+    $form->disableEditingCheck();
+    // $form->disableCreatingCheck();
+    $form->disableViewCheck();
+    $form->disableReset();
+    $form->disableCreatingCheck();
+
+    $form->tools(function (Form\Tools $tools) {
+        $tools->disableDelete();
+        $tools->disableView();
+    });
+});
 
 
 Encore\Admin\Form::forget(['map', 'editor']);

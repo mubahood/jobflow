@@ -10,14 +10,14 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 
-class CandidateController extends AdminController
+class InterpolController extends AdminController
 {
     /**
      * Title for current resource.
      *
      * @var string
      */
-    protected $title = 'Candidates';
+    protected $title = 'Interpol - Musaned';
 
     /**
      * Make a grid builder.
@@ -30,6 +30,13 @@ class CandidateController extends AdminController
         $grid->disableCreation();
         $grid->disableBatchActions();
         $grid->quickSearch('name')->placeholder('Search by name');
+
+        $grid->model()
+            ->where([
+                'stage' => 'Interpol'
+            ])->orderBy('id', 'desc');
+
+
 
         $grid->column('id', __('ID'))->sortable();
         $grid->column('created_at', __('Registered'))
@@ -79,7 +86,7 @@ class CandidateController extends AdminController
                     return $x;
                 }
                 return $this->sub->name_text;
-            })->sortable();
+            })->hide();
         $grid->column('nin', __('NIN'))->hide();
         $grid->column('village', __('Village'))->hide();
         $grid->column('address', __('Address'))->hide();
@@ -87,14 +94,14 @@ class CandidateController extends AdminController
         $grid->column('weight', __('Weight'))->hide();
         $grid->column('height', __('Height'))->hide();
         $grid->column('religion', __('Religion'))->hide();
-        $grid->column('agent', __('Agent'));
+        $grid->column('agent', __('Agent'))->hide();
         $grid->column('has_passport', __('Has Passport'))
             ->filter([
                 'Yes' => 'Yes',
                 'No' => 'No',
-            ])->sortable();
+            ])->hide();
         $grid->column('passport_number', __('Passport number'))->hide();
-        $grid->column('passport_issue_date', __('Passport issue date'))->sortable();
+        $grid->column('passport_issue_date', __('Passport issue date'))->hide();
         $grid->column('passport_expiry', __('Passport expiry'))->hide()->sortable();
         $grid->column('education_level', __('Education level'))->hide()->sortable();
         $grid->column('skills', __('Skills'))->hide();
@@ -119,14 +126,14 @@ class CandidateController extends AdminController
             ->width(80)
             ->sortable();
 
-        $grid->column('registration_fee', __('Registration fee'));
+        $grid->column('registration_fee', __('Registration fee'))->hide();
         $grid->column('account', __('Account'))->hide();
         $grid->column('destination_country', __('Destination country'))->sortable();
         $grid->column('job_type', __('Job type'));
         $grid->column('has_paid', __('Has paid'))->filter([
             'Yes' => 'Yes',
             'No' => 'No',
-        ])->sortable();
+        ])->hide();
         $grid->column('stage', __('Stage'))->sortable();
 
 
@@ -251,146 +258,24 @@ class CandidateController extends AdminController
     {
         $form = new Form(new Candidate());
 
-        $form->image('photo', __('Candidate\'s passport size Photo'));
-        $form->image('full_photo', __('Candidate\'s Full photo'));
-        $form->text('first_name', __('First name'))->rules('required');
-        $form->text('middle_name', __('Middle name'));
-        $form->text('last_name', __('Last name'))->rules('required');
-        $form->radio('sex', __('Sex'))
+        $form->radio('musaned_status', __('Does this candidate have passport?'))
             ->options([
-                'Male' => 'Male',
-                'Female' => 'Female',
-            ])
-            ->rules('required');
-        $form->date('dob', __('Date of birth'))->rules(
-            'required'
-        );
-
-        $form->decimal('weight', __('Weight'))->rules('required');
-        $form->decimal('height', __('Height'))->rules('required');
-
-        $form->text('phone_number', __('Phone number'))->rules('required');
-        $form->text('phone_number_2', __('Phone number 2'));
-        $form->email('email', __('Email Address'));
-
-        $form->select('subcounty_id', __('Subcounty'))
-            ->rules('required')
-            ->options(Location::get_sub_counties_array())->rules('required');
-        $form->text('village', __('Village'));
-        $form->text('address', __('Home Address'))->rules('required');
-
-        $form->select('religion', __('Religion'))
-            ->options([
-                'Muslem' => 'Muslem',
-                'Christian' => 'Christian',
-                'Other' => 'Other',
-            ])->rules('required');
-
-        $form->text('nin', __('National ID Number'))->rules('required');
-        $form->text('agent', __('Agent Name'));
-
-        $form->divider();
-
-        $form->radio('has_passport', __('Does this candidate have passport?'))
-            ->options([
-                'Yes' => 'Yes',
-                'No' => 'No',
-            ])->when('Yes', function ($form) {
-                $form->text('passport_number', __('Passport number'))->rules('required');
-                $form->date('passport_issue_date', __('Passport issue date'))->rules('required');
-                $form->date('passport_expiry', __('Passport expiry date'))->rules('required');
-                $form->image('passport_copy', __('Passport copy photo'))->rules('required');
+                'Passed' => 'Passed',
+                'Failed' => 'Failed',
+            ])->when('Passed', function ($form) {
+                $form->select('stage', __('Next Stage'))
+                    ->options([
+                        'Interpol' => 'Interpol'
+                    ])->rules('required');
+                $form->date('interpal_appointment_date', __('Interpol appointment date'))
+                    ->rules('required');
+            })
+            ->when('Failed', function ($form) {
+                $form->text('failed_reason', __('Reason failure'))
+                    ->rules('required');
             })
             ->rules('required');
 
-        $form->select('education_level', __('Education level'))
-            ->options([
-                'None' => 'None - (Not educated at all)',
-                'Below primary' => 'Below primary - (Did not complete P.7)',
-                'Primary' => 'Primary - (Completed P.7)',
-                'Secondary' => 'Secondary - (Completed S.4)',
-                'A-Level' => 'Advanced level - (Completed S.6)',
-                'Bachelor' => 'Bachelor - (Degree)',
-                'Masters' => 'Masters',
-                'PhD' => 'PhD',
-            ])->rules('required');
-
-        $form->tags('skills', __('Skills'))->options([
-            'Cooking' => 'Cooking',
-            'Driving' => 'Driving',
-        ])->rules('required');
-
-        $form->text('parent_farther_name', __("Father's name"));
-        $form->text('parent_farther_contact', __("Father's contact"));
-        $form->text('parent_farther_address', __("Father's address"));
-        $form->text('parent_mother_name', __("Mother's name"));
-        $form->text('parent_mother_contact', __("Mother's contact"));
-        $form->text('parent_mother_address', __("Mother's address"));
-
-        $form->text('next_of_kin_releationship', __('Next of kin releationship'))->rules('required');
-        $form->text('next_of_kin_name', __('Next of kin name'))->rules('required');
-        $form->text('next_of_kin_contact', __('Next of kin contact'))->rules('required');
-        $form->text('next_of_kin_address', __('Next of kin address'))->rules('required');
-
-
-        $form->divider();
-        $form->select('stage', __('Stage'))
-            ->options([
-                'Musaned' => 'Musaned'
-            ])->default('Medication')->rules('required');
-        $form->select('destination_country', __('Destination country'))->options([
-            'Saudi Arabia' => 'Saudi Arabia',
-            'Dubai' => 'Dubai',
-        ])->rules(
-            'required'
-        );
-
-        $form->text('job_type', __('Job interested in'))
-            ->options([
-                'Driving' => 'Driving',
-            ])->rules(
-                'required'
-            );
-
-        $form->radio('has_paid', __('Has paid Registration fee?'))
-            ->options([
-                'Yes' => 'Yes',
-                'No' => 'No',
-            ])->when('Yes', function ($form) {
-                $form->decimal('registration_fee', __('Registration fee'))->rules('required');
-                $form->select('account', __('Paid to Account'))->options([
-                    'Bank account' => 'Bank account',
-                    'Cash account' => 'Cash account',
-                ])->rules(
-                    'required'
-                );
-            })
-            ->rules('required');
-
-
-        /*         $form->text('medical_hospital', __('Medical hospital'));
-        $form->text('medical_date', __('Medical date'));
-        $form->text('medical_status', __('Medical status'));
-        $form->text('musaned_status', __('Musaned status'));
-        $form->text('failed_reason', __('Failed reason'));
-
-        $form->text('interpal_done', __('Interpal done'));
-        $form->text('interpal_status', __('Interpal status'));
-        $form->text('cv_sharing', __('Cv sharing'));
-        $form->text('cv_shared_with_partners', __('Cv shared with partners'));
-        $form->text('emis_upload', __('Emis upload'));
-        $form->text('on_training', __('On training'));
-        $form->text('training_start_date', __('Training start date'));
-        $form->text('training_end_date', __('Training end date'));
-        $form->text('ministry_aproval', __('Ministry aproval'));
-        $form->text('enjaz_applied', __('Enjaz applied'));
-        $form->text('enjaz_status', __('Enjaz status'));
-        $form->text('embasy_submited', __('Embasy submited'));
-        $form->text('embasy_date_submited', __('Embasy date submited'));
-        $form->text('embasy_status', __('Embasy status'));
-        $form->text('depature_status', __('Depature status'));
-        $form->text('depature_date', __('Depature date'));
-        $form->text('depature_comment', __('Depature comment')); */
 
         return $form;
     }
