@@ -35,7 +35,7 @@ class CandidateController extends AdminController
         $grid->column('created_at', __('Registered'))
             ->display(function ($x) {
                 return Utils::my_date_1($x);
-            })->hide()
+            })
             ->sortable();
 
         $grid->column('photo', __('Photo'))
@@ -55,7 +55,11 @@ class CandidateController extends AdminController
             ->width(80)
             ->hide()
             ->sortable();
-        $grid->column('name', __('Name'))->sortable();
+        $grid->column('name', __('Name'))
+        ->display(function(){
+            return $this->first_name." ".$this->last_name;
+        })
+        ->sortable();
         $grid->column('first_name', __('First name'))->hide();
         $grid->column('middle_name', __('Middle name'))->hide();
         $grid->column('sex', __('Sex'))->filter([
