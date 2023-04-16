@@ -70,11 +70,11 @@ administrator_id
 
             $name = $line[0];
             $user = Person::where(['name' => $name])->first();
-            if($user ==null){
+            if ($user == null) {
                 continue;
             }
             $user->district_id = 88;
-            $user->parish .= 1; 
+            $user->parish .= 1;
             $user->save();
             continue;
 
@@ -490,6 +490,12 @@ administrator_id
     }
     public static function system_boot()
     {
+        foreach ($r = Candidate::where([
+            'name' => null
+        ])->get() as $key => $value) {
+            $value->name = $value->first_name . " " . $value->middle_name . " " . $value->last_name;
+            $value->save();
+        }
         $u = Admin::user();
 
         if ($u != null) {

@@ -22,7 +22,7 @@ use App\Models\Utils;
             <b>Recently Registered Candidates</b>
         </h3>
         <div>
-            <a href="{{ admin_url('/members') }}" class="btn btn-sm btn-primary mt-md-4 mt-4">
+            <a href="{{ admin_url('/candidates') }}" class="btn btn-sm btn-primary mt-md-4 mt-4">
                 View All
             </a>
         </div>
@@ -56,7 +56,7 @@ use App\Models\Utils;
                                     ">
                                     </div>
                                     <div class="d-flex justify-content-start flex-column pl-3">
-                                        <a href="#" style="color: black; font-weight: 600;"
+                                        <a href="{{ admin_url('/candidates/'.$i->id) }}" style="color: black; font-weight: 600;"
                                             class="text-dark fw-bolder text-hover-primary fs-6">{{ Str::limit($i->name, 20) }}</a>
                                         <span
                                             class="text-muted fw-bold text-muted d-block fs-7">{{ $i->sub->name_text }}</span>
@@ -85,7 +85,7 @@ use App\Models\Utils;
                             </td>
                             <td>
                                 <div class=" justify-content-end text-right ">
-                                    <a href="{{ admin_url("/members/{$i->id}") }}" title="View profile"
+                                    <a href="{{ admin_url("/candidates/{$i->id}") }}" title="View profile"
                                         class="btn btn-icon btn-bg-light  text-primary  me-1 p-0 px-2 m-0"
                                         style="font-size: 12px;">
                                         <i class="fa fa-eye"></i>
@@ -99,7 +99,7 @@ use App\Models\Utils;
                                         <span>Send email</span>
                                     </a>
                                     <br>
-                                    <a href="mailto:{{ $i->email }}" title="View profile"
+                                    <a href="tel:{{ $i->phone_number }}" title="View profile"
                                         class="btn btn-icon btn-bg-light  text-primary  me-1 p-0 px-2 m-0"
                                         style="font-size: 12px;">
                                         <i class="fa fa-phone"></i>
