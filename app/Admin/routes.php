@@ -19,6 +19,7 @@ Route::group([
     $router->resource('musaned', MusanedController::class);
     $router->resource('interpol', InterpolController::class);
     $router->resource('shared-cvs', SharedCvController::class);
+    $router->resource('emis', EmisUploadController::class);
 
     $router->resource('crops', CropController::class);
     $router->resource('crop-protocols', CropProtocolController::class);

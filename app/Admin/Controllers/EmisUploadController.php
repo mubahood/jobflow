@@ -10,14 +10,14 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 
-class SharedCvController extends AdminController
+class EmisUploadController extends AdminController
 {
     /**
      * Title for current resource.
      *
      * @var string
      */
-    protected $title = 'Shared CVs';
+    protected $title = 'EMIS Uploaded';
 
     /**
      * Make a grid builder.
@@ -265,11 +265,11 @@ class SharedCvController extends AdminController
     {
         $form = new Form(new Candidate());
 
-        $form->radio('emis_upload', __('Has this candidate been uploaded to EMIS?'))
+        $form->radio('musaned_status', __('Does this candidate have passport?'))
             ->options([
-                'Yes' => 'Yes',
-                'No' => 'Failed',
-            ])->when('Yes', function ($form) {
+                'Passed' => 'Passed',
+                'Failed' => 'Failed',
+            ])->when('Passed', function ($form) {
                 $form->select('stage', __('Next Stage'))
                     ->options([
                         'Interpol' => 'Interpol'
@@ -277,9 +277,9 @@ class SharedCvController extends AdminController
                 $form->date('interpal_appointment_date', __('Interpol appointment date'))
                     ->rules('required');
             })
-            ->when('No', function ($form) {
-                $form->hidden('stage', __('Next Stage'))
-                    ->value('Failed')->default('Failed'); 
+            ->when('Failed', function ($form) {
+                $form->text('failed_reason', __('Reason failure'))
+                    ->rules('required');
             })
             ->rules('required');
 
