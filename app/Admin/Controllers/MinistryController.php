@@ -2,7 +2,8 @@
 
 namespace App\Admin\Controllers;
 
-use App\Admin\Actions\Post\BatchEmisUpload;
+use App\Admin\Actions\Post\BatchReadyForMinistry;
+use App\Admin\Actions\Post\BatchReadyForTraining;
 use App\Admin\Actions\Post\FailedBatch;
 use App\Models\Candidate;
 use App\Models\Location;
@@ -12,14 +13,14 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 
-class SharedCvController extends AdminController
+class MinistryController extends AdminController
 {
     /**
      * Title for current resource.
      *
      * @var string
      */
-    protected $title = 'Shared CVs';
+    protected $title = 'Ministry';
 
     /**
      * Make a grid builder.
@@ -30,18 +31,18 @@ class SharedCvController extends AdminController
     {
         $grid = new Grid(new Candidate());
         $grid->disableCreation();
-        $grid->quickSearch('name')->placeholder('Search by name');
 
         $grid->batchActions(function ($batch) {
-            $batch->add(new BatchEmisUpload());
-            $batch->add(new FailedBatch());
+            $batch->add(new BatchReadyForMinistry());
+            $batch->add(new FailedBatch);
         });
 
 
+        $grid->quickSearch('name')->placeholder('Search by name');
 
         $grid->model()
             ->where([
-                'stage' => 'Shared Cv'
+                'stage' => 'Ministry'
             ])->orderBy('id', 'desc');
 
 
@@ -85,7 +86,7 @@ class SharedCvController extends AdminController
         $grid->column('dob', __('D.O.B'))->display(function ($x) {
             return Utils::my_date_1($x);
         })->hide();
-        $grid->column('phone_number', __('Phone number'));
+        $grid->column('phone_number', __('Phone number'))->hide();
         $grid->column('email', __('Email'))->hide();
         $grid->column('district_id', __('District id'))->hide();
         $grid->column('subcounty_id', __('Subcounty'))
@@ -166,8 +167,8 @@ class SharedCvController extends AdminController
             ->sortable();
         $grid->column('emis_upload', __('Emis upload'))->hide();
         $grid->column('on_training', __('On training'))->hide();
-        $grid->column('training_start_date', __('Training start date'))->hide();
-        $grid->column('training_end_date', __('Training end date'))->hide();
+        $grid->column('training_start_date', __('Training start date'));
+        $grid->column('training_end_date', __('Training end date'));
         $grid->column('ministry_aproval', __('Ministry aproval'))->hide();
         $grid->column('enjaz_applied', __('Enjaz applied'))->hide();
         $grid->column('enjaz_status', __('Enjaz status'))->hide();
@@ -273,19 +274,29 @@ class SharedCvController extends AdminController
     {
         $form = new Form(new Candidate());
 
-        $form->radio('stage', __('Has this candidate been uploaded to EMIS?'))
+        $form->radio('stage', __('Is this candidate ready for Ministry Approval?'))
             ->options([
-                'EMIS' => 'Yes',
-                'Failed' => 'Failed',
-            ])->when('EMIS', function ($form) {
-                $form->hidden('emis_upload', __('Next Stage'))
-                    ->value('Yes')->default('Yes');
+                'Ministry' => 'Yes',
+                'Failed' => 'Failed at this level',
+            ])->when('Training', function ($form) {
+
+
+                $form->hidden('on_training', __('Yes'))
+                    ->rules('required');
+                /* 
+                $form->date('training_start_date', __('Training start date'))
+                    ->rules('required');
+
+                $form->date('training_end_date', __('Training end date'))
+                    ->rules('required'); */
             })
             ->when('Failed', function ($form) {
-                $form->text('failed_reason', __('Interpol appointment date'))
+
+                $form->hidden('on_training', __('No'))
                     ->rules('required');
-                $form->hidden('emis_upload', __('Next Stage'))
-                    ->value('Failed')->default('Failed');
+
+                $form->text('failed_reason', __('Reason failure'))
+                    ->rules('required');
             })
             ->rules('required');
 

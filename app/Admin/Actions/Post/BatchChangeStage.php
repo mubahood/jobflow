@@ -31,7 +31,9 @@ class BatchChangeStage extends BatchAction
             ->options([
                 'Musaned' => 'Musaned',
                 'Interpol' => 'Interpol',
-                'Shared CV' => 'Shared CV'
+                'Shared CV' => 'Shared CV',
+                'Training' => 'Training',
+                'Ministry' => 'Ministry',
             ])->rules('required');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Post\BatchReadyForMinistry;
 use App\Admin\Actions\Post\BatchReadyForTraining;
 use App\Admin\Actions\Post\FailedBatch;
 use App\Models\Candidate;
@@ -32,7 +33,7 @@ class TrainingController extends AdminController
         $grid->disableCreation();
 
         $grid->batchActions(function ($batch) {
-            $batch->add(new BatchReadyForTraining());
+            $batch->add(new BatchReadyForMinistry());
             $batch->add(new FailedBatch);
         });
 
@@ -153,17 +154,7 @@ class TrainingController extends AdminController
         $grid->column('interpal_done', __('Interpal done'))->hide();
         $grid->column('interpal_status', __('Interpal status'))->hide();
         $grid->column('cv_sharing', __('Cv sharing'))->hide();
-        $grid->column('cv_shared_with_partners', __('Cv shared with partners'))
-            ->display(function ($var) {
-                $camps = "";
-                if (is_array($var)) {
-                    foreach ($var as $key => $v) {
-                        $camps .= $v . ",";
-                    }
-                }
-                return $camps;
-            })
-            ->sortable();
+        $grid->column('cv_shared_with_partners', __('Cv shared with partners'))->hide();
         $grid->column('emis_upload', __('Emis upload'))->hide();
         $grid->column('on_training', __('On training'))->hide();
         $grid->column('training_start_date', __('Training start date'));
@@ -273,24 +264,25 @@ class TrainingController extends AdminController
     {
         $form = new Form(new Candidate());
 
-        $form->radio('stage', __('Is this candidate ready for Training?'))
+        $form->radio('stage', __('Is this candidate ready for Ministry Approval?'))
             ->options([
-                'Training' => 'Yes',
+                'Ministry' => 'Yes',
                 'Failed' => 'Failed at this level',
             ])->when('Training', function ($form) {
 
-                $form->hidden('emis_upload', __('Yes'))
-                    ->rules('required');
 
+                $form->hidden('on_training', __('Yes'))
+                    ->rules('required');
+                /* 
                 $form->date('training_start_date', __('Training start date'))
                     ->rules('required');
 
                 $form->date('training_end_date', __('Training end date'))
-                    ->rules('required');
+                    ->rules('required'); */
             })
             ->when('Failed', function ($form) {
 
-                $form->hidden('emis_upload', __('No'))
+                $form->hidden('on_training', __('No'))
                     ->rules('required');
 
                 $form->text('failed_reason', __('Reason failure'))
