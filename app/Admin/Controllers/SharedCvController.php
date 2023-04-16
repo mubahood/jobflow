@@ -2,8 +2,6 @@
 
 namespace App\Admin\Controllers;
 
-use App\Admin\Actions\Post\FailedBatch;
-use App\Admin\Actions\Post\InterpolSumitted;
 use App\Models\Candidate;
 use App\Models\Location;
 use App\Models\Utils;
@@ -12,14 +10,14 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 
-class MusanedController extends AdminController
+class SharedCvController extends AdminController
 {
     /**
      * Title for current resource.
      *
      * @var string
      */
-    protected $title = 'Candidates - Musaned';
+    protected $title = 'Shared CVs';
 
     /**
      * Make a grid builder.
@@ -29,17 +27,13 @@ class MusanedController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Candidate());
-
-        $grid->batchActions(function ($batch) {
-            $batch->add(new InterpolSumitted());
-            $batch->add(new FailedBatch);
-        });
-
+        $grid->disableCreation();
+        $grid->disableBatchActions();
         $grid->quickSearch('name')->placeholder('Search by name');
 
         $grid->model()
             ->where([
-                'stage' => 'Musaned'
+                'stage' => 'Shared Cv'
             ])->orderBy('id', 'desc');
 
 
@@ -135,26 +129,33 @@ class MusanedController extends AdminController
         $grid->column('registration_fee', __('Registration fee'))->hide();
         $grid->column('account', __('Account'))->hide();
         $grid->column('destination_country', __('Destination country'))->sortable();
-        $grid->column('job_type', __('Job type'));
+        $grid->column('job_type', __('Job type'))->hide();
         $grid->column('has_paid', __('Has paid'))->filter([
             'Yes' => 'Yes',
             'No' => 'No',
         ])->hide();
         $grid->column('stage', __('Stage'))->sortable();
 
-
-
-
         $grid->column('medical_hospital', __('Medical hospital'))->hide();
         $grid->column('medical_date', __('Medical date'))->hide();
         $grid->column('medical_status', __('Medical status'))->hide();
         $grid->column('musaned_status', __('Musaned status'))->hide();
         $grid->column('failed_reason', __('Failed reason'))->hide();
-        $grid->column('interpal_appointment_date', __('Interpal appointment date'))->hide();
+        $grid->column('interpal_appointment_date', __('Interpal Appointment Date'))->sortable();
         $grid->column('interpal_done', __('Interpal done'))->hide();
         $grid->column('interpal_status', __('Interpal status'))->hide();
         $grid->column('cv_sharing', __('Cv sharing'))->hide();
-        $grid->column('cv_shared_with_partners', __('Cv shared with partners'))->hide();
+        $grid->column('cv_shared_with_partners', __('Cv shared with partners'))
+            ->display(function ($var) {
+                $camps = "";
+                if (is_array($var)) {
+                    foreach ($var as $key => $v) {
+                        $camps .= $v . ",";
+                    }
+                }
+                return $camps;
+            })
+            ->sortable();
         $grid->column('emis_upload', __('Emis upload'))->hide();
         $grid->column('on_training', __('On training'))->hide();
         $grid->column('training_start_date', __('Training start date'))->hide();
@@ -264,11 +265,11 @@ class MusanedController extends AdminController
     {
         $form = new Form(new Candidate());
 
-        $form->radio('musaned_status', __('Has this candidate been submited to Musaned?'))
+        $form->radio('musaned_status', __('Does this candidate have passport?'))
             ->options([
-                'Yes' => 'Yes',
-                'No' => 'No',
-            ])->when('Yes', function ($form) {
+                'Passed' => 'Passed',
+                'Failed' => 'Failed',
+            ])->when('Passed', function ($form) {
                 $form->select('stage', __('Next Stage'))
                     ->options([
                         'Interpol' => 'Interpol'
@@ -276,11 +277,13 @@ class MusanedController extends AdminController
                 $form->date('interpal_appointment_date', __('Interpol appointment date'))
                     ->rules('required');
             })
-            ->when('No', function ($form) {
+            ->when('Failed', function ($form) {
                 $form->text('failed_reason', __('Reason failure'))
                     ->rules('required');
             })
-            ->rules('required'); 
+            ->rules('required');
+
+
         return $form;
     }
 }

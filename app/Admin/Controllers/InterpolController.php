@@ -2,6 +2,8 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Post\BatchChangeInterpolSharedCV;
+use App\Admin\Actions\Post\BatchChangeStage;
 use App\Models\Candidate;
 use App\Models\Location;
 use App\Models\Utils;
@@ -17,7 +19,7 @@ class InterpolController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Interpol - Musaned';
+    protected $title = 'Interpol';
 
     /**
      * Make a grid builder.
@@ -28,7 +30,11 @@ class InterpolController extends AdminController
     {
         $grid = new Grid(new Candidate());
         $grid->disableCreation();
-        $grid->disableBatchActions();
+
+        $grid->batchActions(function ($batch) {
+            $batch->add(new BatchChangeInterpolSharedCV());
+        });
+
         $grid->quickSearch('name')->placeholder('Search by name');
 
         $grid->model()
@@ -255,17 +261,21 @@ class InterpolController extends AdminController
     {
         $form = new Form(new Candidate());
 
-        $form->radio('musaned_status', __('Does this candidate have passport?'))
+        $form->radio('interpal_status', __('Has this candidate compted Interpol?'))
             ->options([
-                'Passed' => 'Passed',
-                'Failed' => 'Failed',
-            ])->when('Passed', function ($form) {
+                'Yes' => 'Yes',
+                'No' => 'No',
+            ])->when('Yes', function ($form) {
                 $form->select('stage', __('Next Stage'))
                     ->options([
-                        'Interpol' => 'Interpol'
+                        'Shared Cv' => 'Shared Cv'
                     ])->rules('required');
-                $form->date('interpal_appointment_date', __('Interpol appointment date'))
-                    ->rules('required');
+                $form->multipleSelect('cv_shared_with_partners', __('CV shared with partners'))
+                    ->options([
+                        'Company 1' => 'Company 1',
+                        'Company 2' => 'Company 2',
+                        'Company 3' => 'Company 3'
+                    ])->rules('required');
             })
             ->when('Failed', function ($form) {
                 $form->text('failed_reason', __('Reason failure'))

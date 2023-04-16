@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Post\BatchChangeStage;
 use App\Admin\Actions\Post\BatchReplicate;
 use App\Models\Candidate;
 use App\Models\Location;
@@ -28,6 +29,11 @@ class CandidateController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Candidate());
+
+        $grid->batchActions(function ($batch) {
+            $batch->add(new BatchChangeStage());
+        });
+
 
         $grid->disableCreation();
         //$grid->disableBatchActions();

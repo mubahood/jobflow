@@ -18,6 +18,7 @@ Route::group([
     $router->resource('candidates', CandidateController::class);
     $router->resource('musaned', MusanedController::class);
     $router->resource('interpol', InterpolController::class);
+    $router->resource('shared-cvs', SharedCvController::class);
 
     $router->resource('crops', CropController::class);
     $router->resource('crop-protocols', CropProtocolController::class);
