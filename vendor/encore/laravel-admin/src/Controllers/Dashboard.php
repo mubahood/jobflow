@@ -14,7 +14,7 @@ class Dashboard
 
     public static function dashboard_members()
     {
-        $members = Candidate::where([])->orderBy('id', 'desc')->limit(8)->get();
+        $members = Candidate::where([])->orderBy('id', 'desc')->limit(9)->get();
         return view('dashboard.members', [
             'items' => $members
         ]);

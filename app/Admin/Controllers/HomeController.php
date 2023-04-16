@@ -162,12 +162,11 @@ class HomeController extends Controller
             $row->column(6, function (Column $column) {
                 $column->append(Dashboard::dashboard_members());
             });
-            $row->column(3, function (Column $column) {
+            $row->column(6, function (Column $column) {
+                $column->append(view('widgets.by-categories', []));
+                $column->append(view('widgets.by-districts', [])); 
                // $column->append(Dashboard::dashboard_events());
-            });
-            $row->column(3, function (Column $column) {
-               // $column->append(Dashboard::dashboard_news());
-            });
+            }); 
         });
 
 
