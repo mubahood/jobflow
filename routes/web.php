@@ -4,12 +4,23 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\MainController;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\RedirectIfAuthenticated;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 
-
 Route::get('generate-class', [MainController::class, 'generate_class']); 
-/* 
 
+Route::get('cv', function () {
+    //return view('print/print-admission-letter');
+    $pdf = App::make('dompdf.wrapper');
+    //$pdf->setOption(['DOMPDF_ENABLE_REMOTE' => false]);
+  
+    //$pdf->loadHTML(view('print/print-admission-letter'));
+    $pdf->loadHTML('romina');
+    return $pdf->stream();
+  });
+
+
+/*
 Route::get('generate-variables', [MainController::class, 'generate_variables']); 
 Route::get('/', [MainController::class, 'index'])->name('home');
 Route::get('/about-us', [MainController::class, 'about_us']);
