@@ -19,7 +19,7 @@ use App\Models\Utils;
     <!--begin::Header-->
     <div class="d-flex justify-content-between px-3 px-md-4 ">
         <h3>
-            <b>Recently joined members</b>
+            <b>Recently Registered Candidates</b>
         </h3>
         <div>
             <a href="{{ admin_url('/members') }}" class="btn btn-sm btn-primary mt-md-4 mt-4">
@@ -36,8 +36,7 @@ use App\Models\Utils;
                 <thead>
                     <tr class="fw-bolder text-muted">
                         <th class="min-w-200px">Member</th>
-                        <th class="min-w-150px">Group</th>
-                        <th class="min-w-150px">Current address</th>
+                        <th class="min-w-150px">Current Stage</th>
                         <th class="text-right">Connect</th>
                     </tr>
                 </thead>
@@ -49,7 +48,7 @@ use App\Models\Utils;
                                 <div class="d-flex align-items-center">
                                     <div
                                         style="
-                                    background-image: url({{ $i->avatar }});
+                                    background-image: url({{ url('storage/' . $i->photo) }});
                                     background-position: center;
                                     background-size: cover;
                                     border-radius: 8px;
@@ -60,33 +59,28 @@ use App\Models\Utils;
                                         <a href="#" style="color: black; font-weight: 600;"
                                             class="text-dark fw-bolder text-hover-primary fs-6">{{ Str::limit($i->name, 20) }}</a>
                                         <span
-                                            class="text-muted fw-bold text-muted d-block fs-7">{{ $i->country ?? '- ' }}</span>
+                                            class="text-muted fw-bold text-muted d-block fs-7">{{ $i->sub->name_text }}</span>
                                         <span class="text-muted fw-bold text-muted d-block fs-7">
                                             <b class="p-0 m-0 small text-dark">SEX:</b>
                                             {{ Str::of($i->sex)->limit(10) }}
                                         </span>
                                         <span class="text-muted fw-bold text-muted d-block fs-7">
-                                            <b class="p-0 m-0 small text-dark">JOINED:</b>
-                                            {{ $i->created_at_text }}
+                                            <b class="p-0 m-0 small text-dark">REGISTRED: </b>
+                                            {{ Utils::my_date($i->created_at) }}
                                         </span>
                                     </div>
                                 </div>
                             </td>
                             <td>
-                                @if ($i->program()->id < 1)
-                                    <b class="">No imformation yet</b>
-                                @else
-                                    <b class="text-dark fw-bold  d-block fs-7"
-                                        style="color: black">{{ Str::limit($i->program()->program_name, 20) }}</b>
-                                    <p class="text-dark d-block fs-6 p-0 m-0">
-                                        {{ Str::limit($i->program()->program_award, 20) }}</p>
-                                    <b class="fw-bold text-primary d-block fs-7">{{ $i->program()->program_year }}</b>
-                                @endif
+
+                                <b class="text-white fw-bold  badge bg-success fs-7 " >
+                                    {{ $i->stage }}
+                                </b>
 
                             </td>
                             <td class="text-end">
-                                <p class="p-0 m-0"><b>COUNTRY:</b> {{ $i->country }}</p>
-                                <p class="p-0 m-0"><b>ADDRESS:</b> {{ Str::limit($i->address, 20) }}</p>
+                                <p class="p-0 m-0"><b>COUNTRY:</b> {{ $i->destination_country }}</p>
+                                <p class="p-0 m-0"><b>JOB:</b> {{ Str::limit($i->job_type, 20) }}</p>
                                 <p class="p-0 m-0"><b>EMAIL:</b> {{ Str::limit($i->email, 20) }}</p>
                             </td>
                             <td>
@@ -110,7 +104,7 @@ use App\Models\Utils;
                                         style="font-size: 12px;">
                                         <i class="fa fa-phone"></i>
                                         <span>Call {{ $i->first_name }}</span>
-                                    </a> 
+                                    </a>
 
 
                                 </div>

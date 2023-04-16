@@ -2,6 +2,7 @@
 
 namespace Encore\Admin\Controllers;
 
+use App\Models\Candidate;
 use App\Models\Event;
 use App\Models\NewsPost;
 use Encore\Admin\Admin;
@@ -13,7 +14,7 @@ class Dashboard
 
     public static function dashboard_members()
     {
-        $members = Administrator::where([])->orderBy('id', 'desc')->limit(8)->get();
+        $members = Candidate::where([])->orderBy('id', 'desc')->limit(8)->get();
         return view('dashboard.members', [
             'items' => $members
         ]);
