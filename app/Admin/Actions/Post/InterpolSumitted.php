@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class InterpolSumitted extends BatchAction
 {
-    public $name = 'Submitted to Musaned';
+    public $name = 'Ready for Interpol';
 
     public function handle(Collection $collection, Request $r)
     {

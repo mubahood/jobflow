@@ -264,23 +264,26 @@ class MusanedController extends AdminController
     {
         $form = new Form(new Candidate());
 
-        $form->radio('musaned_status', __('Has this candidate been submited to Musaned?'))
+        $form->radio('stage', __('Is this candidate ready for Interpol?'))
             ->options([
-                'Yes' => 'Yes',
-                'No' => 'No',
-            ])->when('Yes', function ($form) {
-                $form->select('stage', __('Next Stage'))
-                    ->options([
-                        'Interpol' => 'Interpol'
-                    ])->rules('required');
+                'Interpol' => 'Yes',
+                'Failed' => 'Failed at this level',
+            ])->when('Interpol', function ($form) {
+
+
+                $form->hidden('musaned_status', __('Yes'))
+                    ->rules('required');
+
                 $form->date('interpal_appointment_date', __('Interpol appointment date'))
                     ->rules('required');
             })
-            ->when('No', function ($form) {
+            ->when('Failed', function ($form) {
+                $form->hidden('musaned_status', __('Failed'))
+                    ->rules('required');
                 $form->text('failed_reason', __('Reason failure'))
                     ->rules('required');
             })
-            ->rules('required'); 
+            ->rules('required');
         return $form;
     }
 }
