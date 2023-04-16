@@ -3,7 +3,7 @@
 $title = isset($title) ? $title : 'Title';
 $style = isset($style) ? $style : 'success';
 $number = isset($number) ? $number : '0.00';
-$sub_title = isset($sub_title) ? $sub_title : 'Sub-titles';
+$sub_title = isset($sub_title) ? $sub_title : null;
 $link = isset($link) ? $link : 'javascript:;';
 
 if (!isset($is_dark)) {
@@ -19,11 +19,9 @@ if ($is_dark) {
     $bg = 'bg-primary';
     $text = 'text-white';
     $text2 = 'text-white';
-
-
 }
 
-if($style == 'danger'){
+if ($style == 'danger') {
     $text = 'text-white';
     $bg = 'bg-danger';
     $text2 = 'text-white';
@@ -33,6 +31,10 @@ if($style == 'danger'){
     <div class="card-body py-0">
         <p class="h3  text-bold mb-2 mb-md-3 {{ $text }} ">{{ $title }}</p>
         <p class="  m-0 text-right {{ $text2 }} h3" style="line-height: 3.2rem">{{ $number }}</p>
-        <p class="mt-4 {{ $text2 }}">{{ $sub_title }}</p>
+        @if ($sub_title)
+            <p class="mt-4 {{ $text2 }}">{{ $sub_title }}</p>
+        @else
+            <br>
+        @endif
     </div>
 </a>

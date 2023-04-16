@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Post\BatchChangeInterpolSharedCV;
 use App\Admin\Actions\Post\BatchChangeStage;
+use App\Admin\Actions\Post\FailedBatch;
 use App\Models\Candidate;
 use App\Models\Location;
 use App\Models\Utils;
@@ -32,7 +33,8 @@ class InterpolController extends AdminController
         $grid->disableCreation();
 
         $grid->batchActions(function ($batch) {
-            $batch->add(new BatchChangeInterpolSharedCV());
+            $batch->add(new BatchChangeInterpolSharedCV()); 
+            $batch->add(new FailedBatch()); 
         });
 
         $grid->quickSearch('name')->placeholder('Search by name');

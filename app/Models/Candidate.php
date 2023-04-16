@@ -15,6 +15,44 @@ class Candidate extends Model
     }
 
 
+    public static function boot()
+    {
+        parent::boot();
+        self::deleting(function ($m) {
+        });
+        self::created(function ($m) {
+        });
+        self::creating(function ($m) {
+
+            $m->district_id = 1;
+
+            if ($m->subcounty_id != null) {
+                $sub = Location::find($m->subcounty_id);
+                if ($sub != null) {
+                    $m->district_id = $sub->parent;
+                } else {
+                    $m->subcounty_id = 1;
+                }
+            }
+
+            return $m;
+        });
+
+
+        self::updating(function ($m) {
+            $m->district_id = 1;
+            $sub = Location::find($m->subcounty_id);
+            if ($sub != null) {
+                $m->district_id = $sub->parent;
+            } else {
+                $m->subcounty_id = 1;
+            }
+            return $m;
+        });
+    }
+
+
+
     /* 
     public function setCvSharedWithPartnersAttribute($pictures)
     {
