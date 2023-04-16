@@ -142,7 +142,7 @@ class HomeController extends Controller
                     'title' => 'Failed',
                     'sub_title' => NULL,
                     'number' => number_format(Candidate::where(['stage' => 'Failed'])->count()),
-                    'link' => 'failed'
+                    'link' => 'failed' 
                 ]));
             });
 

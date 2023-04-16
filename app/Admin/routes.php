@@ -26,6 +26,7 @@ Route::group([
     $router->resource('embasy', SubmitedEmbasyController::class);
     $router->resource('ready-for-departure', ReadyForDepatureController::class);
     $router->resource('traveled', DepaturedController::class);
+    $router->resource('failed', FailedController::class);
 
     $router->resource('crops', CropController::class);
     $router->resource('crop-protocols', CropProtocolController::class);
