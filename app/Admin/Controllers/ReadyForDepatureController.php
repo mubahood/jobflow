@@ -274,26 +274,19 @@ class ReadyForDepatureController extends AdminController
     {
         $form = new Form(new Candidate());
 
-        $form->radio('stage', __('Has this candidate applied for Enjaz?'))
+        $form->radio('stage', __('Has this candidate traveled?'))
             ->options([
                 'Traveled' => 'Yes',
                 'Failed' => 'Failed at this level',
             ])->when('Traveled', function ($form) {
-
-                $form->hidden('depature_status', __('Approval'))
+                $form->hidden('depature_status', __('Yes'))
                     ->default('Yes')
                     ->rules('required');
-                /* 
-                $form->date('training_start_date', __('Training start date'))
-                    ->rules('required');
-
-                $form->date('training_end_date', __('Training end date'))
-                    ->rules('required'); */
             })
             ->when('Failed', function ($form) {
 
                 $form->hidden('depature_status', __('No'))
-                    ->rules('required'); 
+                    ->rules('required');
 
                 $form->text('failed_reason', __('Reason failure'))
                     ->rules('required');
