@@ -20,6 +20,7 @@ Route::group([
     $router->resource('interpol', InterpolController::class);
     $router->resource('shared-cvs', SharedCvController::class);
     $router->resource('emis', EmisUploadController::class);
+    $router->resource('training', TrainingController::class);
 
     $router->resource('crops', CropController::class);
     $router->resource('crop-protocols', CropProtocolController::class);

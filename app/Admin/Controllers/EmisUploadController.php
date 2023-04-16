@@ -2,6 +2,8 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Post\BatchReadyForTraining;
+use App\Admin\Actions\Post\FailedBatch;
 use App\Models\Candidate;
 use App\Models\Location;
 use App\Models\Utils;
@@ -28,13 +30,19 @@ class EmisUploadController extends AdminController
     {
         $grid = new Grid(new Candidate());
         $grid->disableCreation();
-        $grid->disableBatchActions();
+
+        $grid->batchActions(function ($batch) {
+            $batch->add(new BatchReadyForTraining());
+            $batch->add(new FailedBatch);
+        });
+
+
         $grid->quickSearch('name')->placeholder('Search by name');
 
         $grid->model()
             ->where([
                 'stage' => 'EMIS'
-            ])->orderBy('id', 'desc'); 
+            ])->orderBy('id', 'desc');
 
 
 
@@ -265,19 +273,26 @@ class EmisUploadController extends AdminController
     {
         $form = new Form(new Candidate());
 
-        $form->radio('musaned_status', __('Does this candidate have passport?'))
+        $form->radio('stage', __('Is this candidate ready for Training?'))
             ->options([
-                'Passed' => 'Passed',
-                'Failed' => 'Failed',
-            ])->when('Passed', function ($form) {
-                $form->select('stage', __('Next Stage'))
-                    ->options([
-                        'Interpol' => 'Interpol'
-                    ])->rules('required');
-                $form->date('interpal_appointment_date', __('Interpol appointment date'))
+                'Training' => 'Yes',
+                'Failed' => 'Failed at this level',
+            ])->when('Training', function ($form) {
+
+                $form->hidden('emis_upload', __('Yes'))
+                    ->rules('required');
+
+                $form->date('training_start_date', __('Training start date'))
+                    ->rules('required');
+
+                $form->date('training_end_date', __('Training end date'))
                     ->rules('required');
             })
             ->when('Failed', function ($form) {
+
+                $form->hidden('emis_upload', __('No'))
+                    ->rules('required');
+
                 $form->text('failed_reason', __('Reason failure'))
                     ->rules('required');
             })

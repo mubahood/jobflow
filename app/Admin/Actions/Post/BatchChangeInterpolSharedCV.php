@@ -27,7 +27,7 @@ class BatchChangeInterpolSharedCV extends BatchAction
 
     public function form()
     {
-        $this->multipleSelect('cv_shared_with_partners', __('CV shared with partners'))
+        $this->select('cv_shared_with_partners', __('CV shared with partners'))
             ->options([
                 'Company 1' => 'Company 1',
                 'Company 2' => 'Company 2',

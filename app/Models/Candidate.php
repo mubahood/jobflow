@@ -15,16 +15,16 @@ class Candidate extends Model
     }
 
 
-
+    /* 
     public function setCvSharedWithPartnersAttribute($pictures)
     {
         if (is_array($pictures)) {
             $this->attributes['cv_shared_with_partners'] = json_encode($pictures);
         }
     }
-
-    public function getCvSharedWithPartnersAttribute($pictures)
+ */
+    /*     public function getCvSharedWithPartnersAttribute($pictures)
     {
         return json_decode($pictures, true);
-    }
+    } */
 }

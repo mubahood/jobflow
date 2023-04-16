@@ -270,12 +270,12 @@ class InterpolController extends AdminController
                     ->options([
                         'Shared Cv' => 'Shared Cv'
                     ])->rules('required');
-                $form->multipleSelect('cv_shared_with_partners', __('CV shared with partners'))
+                $form->select('cv_shared_with_partners', __('CV shared with partners'))
                     ->options([
                         'Company 1' => 'Company 1',
                         'Company 2' => 'Company 2',
                         'Company 3' => 'Company 3'
-                    ])->rules('required');  
+                    ])->rules('required');
             })
             ->when('Failed', function ($form) {
                 $form->text('failed_reason', __('Reason failure'))
