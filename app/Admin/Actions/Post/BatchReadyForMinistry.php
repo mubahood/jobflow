@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class BatchReadyForMinistry extends BatchAction
 {
-    public $name = 'Ready for ministry';
+    public $name = 'Ready for ministry approval';
 
     public function handle(Collection $collection, Request $r)
     {
