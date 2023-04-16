@@ -22,6 +22,10 @@ Route::group([
     $router->resource('emis', EmisUploadController::class);
     $router->resource('training', TrainingController::class);
     $router->resource('ministry', MinistryController::class);
+    $router->resource('enjaz', EnjazController::class);
+    $router->resource('embasy', SubmitedEmbasyController::class);
+    $router->resource('ready-for-departure', ReadyForDepatureController::class);
+    $router->resource('departured', DepaturedController::class);
 
     $router->resource('crops', CropController::class);
     $router->resource('crop-protocols', CropProtocolController::class);

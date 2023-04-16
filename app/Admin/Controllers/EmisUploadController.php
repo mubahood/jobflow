@@ -270,7 +270,8 @@ class EmisUploadController extends AdminController
                 'Failed' => 'Failed at this level',
             ])->when('Training', function ($form) {
 
-                $form->hidden('emis_upload', __('Yes'))
+                $form->hidden('emis_upload', __('Emis'))
+                   ->default('Yes')
                     ->rules('required');
 
                 $form->date('training_start_date', __('Training start date'))

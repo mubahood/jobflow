@@ -270,8 +270,8 @@ class TrainingController extends AdminController
                 'Failed' => 'Failed at this level',
             ])->when('Training', function ($form) {
 
-
-                $form->hidden('on_training', __('Yes'))
+                $form->hidden('on_training', __('Train'))
+                    ->default('Yes')
                     ->rules('required');
                 /* 
                 $form->date('training_start_date', __('Training start date'))

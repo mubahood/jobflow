@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Post\BatchAppliedForEnjaz;
 use App\Admin\Actions\Post\BatchReadyForMinistry;
 use App\Admin\Actions\Post\BatchReadyForTraining;
 use App\Admin\Actions\Post\FailedBatch;
@@ -33,7 +34,7 @@ class MinistryController extends AdminController
         $grid->disableCreation();
 
         $grid->batchActions(function ($batch) {
-            $batch->add(new BatchReadyForMinistry());
+            $batch->add(new BatchAppliedForEnjaz());
             $batch->add(new FailedBatch);
         });
 
@@ -44,7 +45,6 @@ class MinistryController extends AdminController
             ->where([
                 'stage' => 'Ministry'
             ])->orderBy('id', 'desc');
-
 
 
         $grid->column('id', __('ID'))->sortable();
@@ -274,14 +274,14 @@ class MinistryController extends AdminController
     {
         $form = new Form(new Candidate());
 
-        $form->radio('stage', __('Is this candidate ready for Ministry Approval?'))
+        $form->radio('stage', __('Has this candidate applied for Enjaz?'))
             ->options([
-                'Ministry' => 'Yes',
+                'Enjaz' => 'Yes',
                 'Failed' => 'Failed at this level',
-            ])->when('Training', function ($form) {
+            ])->when('Enjaz', function ($form) {
 
-
-                $form->hidden('on_training', __('Yes'))
+                $form->hidden('ministry_aproval', __('Ministry'))
+                    ->default('Yes')
                     ->rules('required');
                 /* 
                 $form->date('training_start_date', __('Training start date'))
@@ -292,7 +292,7 @@ class MinistryController extends AdminController
             })
             ->when('Failed', function ($form) {
 
-                $form->hidden('on_training', __('No'))
+                $form->hidden('ministry_aproval', __('No'))
                     ->rules('required');
 
                 $form->text('failed_reason', __('Reason failure'))
