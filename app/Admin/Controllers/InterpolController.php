@@ -275,7 +275,7 @@ class InterpolController extends AdminController
                         'Company 1' => 'Company 1',
                         'Company 2' => 'Company 2',
                         'Company 3' => 'Company 3'
-                    ])->rules('required');
+                    ])->rules('required');  
             })
             ->when('Failed', function ($form) {
                 $form->text('failed_reason', __('Reason failure'))

@@ -2,6 +2,8 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Post\BatchEmisUpload;
+use App\Admin\Actions\Post\FailedBatch;
 use App\Models\Candidate;
 use App\Models\Location;
 use App\Models\Utils;
@@ -28,8 +30,14 @@ class SharedCvController extends AdminController
     {
         $grid = new Grid(new Candidate());
         $grid->disableCreation();
-        $grid->disableBatchActions();
         $grid->quickSearch('name')->placeholder('Search by name');
+
+        $grid->batchActions(function ($batch) {
+            $batch->add(new BatchEmisUpload());
+            $batch->add(new FailedBatch());
+        });
+
+
 
         $grid->model()
             ->where([
@@ -265,21 +273,19 @@ class SharedCvController extends AdminController
     {
         $form = new Form(new Candidate());
 
-        $form->radio('emis_upload', __('Has this candidate been uploaded to EMIS?'))
+        $form->radio('stage', __('Has this candidate been uploaded to EMIS?'))
             ->options([
-                'Yes' => 'Yes',
-                'No' => 'Failed',
-            ])->when('Yes', function ($form) {
-                $form->select('stage', __('Next Stage'))
-                    ->options([
-                        'Interpol' => 'Interpol'
-                    ])->rules('required');
-                $form->date('interpal_appointment_date', __('Interpol appointment date'))
-                    ->rules('required');
+                'EMIS' => 'Yes',
+                'Failed' => 'Failed',
+            ])->when('EMIS', function ($form) {
+                $form->hidden('emis_upload', __('Next Stage'))
+                    ->value('Yes')->default('Yes');
             })
-            ->when('No', function ($form) {
-                $form->hidden('stage', __('Next Stage'))
-                    ->value('Failed')->default('Failed'); 
+            ->when('Failed', function ($form) {
+                $form->text('failed_reason', __('Interpol appointment date'))
+                    ->rules('required');
+                $form->hidden('emis_upload', __('Next Stage'))
+                    ->value('Failed')->default('Failed');
             })
             ->rules('required');
 

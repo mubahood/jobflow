@@ -33,8 +33,8 @@ class EmisUploadController extends AdminController
 
         $grid->model()
             ->where([
-                'stage' => 'Shared Cv'
-            ])->orderBy('id', 'desc');
+                'stage' => 'EMIS'
+            ])->orderBy('id', 'desc'); 
 
 
 
