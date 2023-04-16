@@ -15,7 +15,7 @@ Route::get('cv', function () {
     //$pdf->setOption(['DOMPDF_ENABLE_REMOTE' => false]);
   
     //$pdf->loadHTML(view('print/print-admission-letter'));
-    $pdf->loadHTML('romina');
+    $pdf->loadHTML(view('print/cv'));
     return $pdf->stream();
   });
 

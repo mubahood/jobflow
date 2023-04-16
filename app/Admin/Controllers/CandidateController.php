@@ -100,9 +100,9 @@ class CandidateController extends AdminController
             ->filter([
                 'Yes' => 'Yes',
                 'No' => 'No',
-            ])->sortable();
+            ])->hide();
         $grid->column('passport_number', __('Passport number'))->hide();
-        $grid->column('passport_issue_date', __('Passport issue date'))->sortable();
+        $grid->column('passport_issue_date', __('Passport issue date'))->hide();
         $grid->column('passport_expiry', __('Passport expiry'))->hide()->sortable();
         $grid->column('education_level', __('Education level'))->hide()->sortable();
         $grid->column('skills', __('Skills'))->hide();
@@ -163,6 +163,11 @@ class CandidateController extends AdminController
         $grid->column('depature_status', __('Depature status'))->hide();
         $grid->column('depature_date', __('Depature date'))->hide();
         $grid->column('depature_comment', __('Depature comment'))->hide();
+
+        $grid->column('print', __('CV'))->display(function(){
+            $link = url('cv?id='.$this->id);
+            return '<a target="_blank" href="'.$link.'">PRINT CV</a>';
+        });
 
         return $grid;
     }
