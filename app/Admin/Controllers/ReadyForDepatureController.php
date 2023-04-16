@@ -5,6 +5,7 @@ namespace App\Admin\Controllers;
 use App\Admin\Actions\Post\BatchAppliedForEnjaz;
 use App\Admin\Actions\Post\BatchReadyForMinistry;
 use App\Admin\Actions\Post\BatchReadyForTraining;
+use App\Admin\Actions\Post\BatchTraveled;
 use App\Admin\Actions\Post\FailedBatch;
 use App\Models\Candidate;
 use App\Models\Location;
@@ -34,7 +35,7 @@ class ReadyForDepatureController extends AdminController
         $grid->disableCreation();
 
         $grid->batchActions(function ($batch) {
-            $batch->add(new BatchAppliedForEnjaz());
+            $batch->add(new BatchTraveled());
             $batch->add(new FailedBatch);
         });
 
@@ -275,11 +276,11 @@ class ReadyForDepatureController extends AdminController
 
         $form->radio('stage', __('Has this candidate applied for Enjaz?'))
             ->options([
-                'Enjaz' => 'Yes',
+                'Traveled' => 'Yes',
                 'Failed' => 'Failed at this level',
-            ])->when('Enjaz', function ($form) {
+            ])->when('Traveled', function ($form) {
 
-                $form->hidden('ministry_aproval', __('Approval'))
+                $form->hidden('depature_status', __('Approval'))
                     ->default('Yes')
                     ->rules('required');
                 /* 
@@ -291,8 +292,8 @@ class ReadyForDepatureController extends AdminController
             })
             ->when('Failed', function ($form) {
 
-                $form->hidden('ministry_aproval', __('No'))
-                    ->rules('required');
+                $form->hidden('depature_status', __('No'))
+                    ->rules('required'); 
 
                 $form->text('failed_reason', __('Reason failure'))
                     ->rules('required');

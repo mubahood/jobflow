@@ -153,17 +153,7 @@ class SharedCvController extends AdminController
         $grid->column('interpal_done', __('Interpal done'))->hide();
         $grid->column('interpal_status', __('Interpal status'))->hide();
         $grid->column('cv_sharing', __('Cv sharing'))->hide();
-        $grid->column('cv_shared_with_partners', __('Cv shared with partners'))
-            ->display(function ($var) {
-                $camps = "";
-                if (is_array($var)) {
-                    foreach ($var as $key => $v) {
-                        $camps .= $v . ",";
-                    }
-                }
-                return $camps;
-            })
-            ->sortable();
+        $grid->column('cv_shared_with_partners', __('Cv shared with partners'))->sortable();
         $grid->column('emis_upload', __('Emis upload'))->hide();
         $grid->column('on_training', __('On training'))->hide();
         $grid->column('training_start_date', __('Training start date'))->hide();

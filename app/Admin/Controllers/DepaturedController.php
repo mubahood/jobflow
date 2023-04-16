@@ -21,7 +21,7 @@ class DepaturedController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Departured';
+    protected $title = 'Traveled';
 
     /**
      * Make a grid builder.
@@ -32,6 +32,7 @@ class DepaturedController extends AdminController
     {
         $grid = new Grid(new Candidate());
         $grid->disableCreation();
+        $grid->disableBatchActions();
 
         $grid->batchActions(function ($batch) {
             $batch->add(new BatchAppliedForEnjaz());
@@ -43,7 +44,7 @@ class DepaturedController extends AdminController
 
         $grid->model()
             ->where([
-                'stage' => 'Departure'
+                'stage' => 'Traveled'
             ])->orderBy('id', 'desc');
 
 

@@ -25,7 +25,7 @@ Route::group([
     $router->resource('enjaz', EnjazController::class);
     $router->resource('embasy', SubmitedEmbasyController::class);
     $router->resource('ready-for-departure', ReadyForDepatureController::class);
-    $router->resource('departured', DepaturedController::class);
+    $router->resource('traveled', DepaturedController::class);
 
     $router->resource('crops', CropController::class);
     $router->resource('crop-protocols', CropProtocolController::class);
