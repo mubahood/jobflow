@@ -45,7 +45,7 @@ class ReadyForDepatureController extends AdminController
         $grid->model()
             ->where([
                 'stage' => 'Departure'
-            ])->orderBy('id', 'desc');
+                ])->orderBy('updated_at', 'desc');
 
 
         $grid->column('id', __('ID'))->sortable();

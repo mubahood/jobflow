@@ -45,7 +45,7 @@ class SubmitedEmbasyController extends AdminController
         $grid->model()
             ->where([
                 'stage' => 'Embasy'
-            ])->orderBy('id', 'desc');
+            ])->orderBy('updated_at', 'desc');
 
 
         $grid->column('id', __('ID'))->sortable();

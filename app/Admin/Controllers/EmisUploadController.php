@@ -42,7 +42,7 @@ class EmisUploadController extends AdminController
         $grid->model()
             ->where([
                 'stage' => 'EMIS'
-            ])->orderBy('id', 'desc');
+                ])->orderBy('updated_at', 'desc');
 
 
 

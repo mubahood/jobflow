@@ -43,7 +43,7 @@ class TrainingController extends AdminController
         $grid->model()
             ->where([
                 'stage' => 'Training'
-            ])->orderBy('id', 'desc');
+                ])->orderBy('updated_at', 'desc');
 
 
 

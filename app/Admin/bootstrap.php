@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Admin\Extensions\Nav\Shortcut;
 use App\Admin\Extensions\Nav\Dropdown;
 use Encore\Admin\Form;
+use Encore\Admin\Grid;
 
 Utils::system_boot();
 
@@ -65,6 +66,12 @@ Form::init(function (Form $form) {
     $form->tools(function (Form\Tools $tools) {
         $tools->disableDelete();
         $tools->disableView();
+    });
+});
+
+Grid::init(function (Grid $grid) {
+    $grid->batchActions(function ($batch) { 
+        $batch->disableDelete();  
     });
 });
 

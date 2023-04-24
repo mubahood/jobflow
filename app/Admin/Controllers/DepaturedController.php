@@ -45,7 +45,7 @@ class DepaturedController extends AdminController
         $grid->model()
             ->where([
                 'stage' => 'Traveled'
-            ])->orderBy('id', 'desc');
+            ])->orderBy('updated_at', 'desc');
 
 
         $grid->column('id', __('ID'))->sortable();

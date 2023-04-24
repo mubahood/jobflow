@@ -17,6 +17,8 @@ Route::group([
     /* ========================START OF NEW THINGS===========================*/
     $router->resource('candidates', CandidateController::class);
     $router->resource('musaned', MusanedController::class);
+    $router->resource('interviews', InterviewController::class);
+    $router->resource('medical', MedicalController::class);
     $router->resource('interpol', InterpolController::class);
     $router->resource('shared-cvs', SharedCvController::class);
     $router->resource('emis', EmisUploadController::class);

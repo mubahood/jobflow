@@ -44,7 +44,7 @@ class MinistryController extends AdminController
         $grid->model()
             ->where([
                 'stage' => 'Ministry'
-            ])->orderBy('id', 'desc');
+                ])->orderBy('updated_at', 'desc');
 
 
         $grid->column('id', __('ID'))->sortable();

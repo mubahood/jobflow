@@ -42,7 +42,7 @@ class InterpolController extends AdminController
         $grid->model()
             ->where([
                 'stage' => 'Interpol'
-            ])->orderBy('id', 'desc');
+                ])->orderBy('updated_at', 'desc');
 
 
 

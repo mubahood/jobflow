@@ -45,8 +45,7 @@ class FailedController extends AdminController
         $grid->model()
             ->where([
                 'stage' => 'Failed'
-            ])->orderBy('id', 'desc');
-
+                ])->orderBy('updated_at', 'desc');
 
         $grid->column('id', __('ID'))->sortable();
         $grid->column('created_at', __('Registered'))

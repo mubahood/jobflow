@@ -2,10 +2,10 @@
 
 namespace App\Admin\Controllers;
 
-use App\Admin\Actions\Post\BatchReadyForMinistry;
-use App\Admin\Actions\Post\BatchReadyForTraining;
-use App\Admin\Actions\Post\BatchSubmittedToEmbasy;
+use App\Admin\Actions\Post\BatchMedical;
+use App\Admin\Actions\Post\BatchMusaned;
 use App\Admin\Actions\Post\FailedBatch;
+use App\Admin\Actions\Post\InterpolSumitted;
 use App\Models\Candidate;
 use App\Models\Location;
 use App\Models\Utils;
@@ -14,14 +14,14 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 
-class EnjazController extends AdminController
+class MedicalController extends AdminController
 {
     /**
      * Title for current resource.
      *
      * @var string
      */
-    protected $title = 'Enjaz';
+    protected $title = 'PRE GCC MEDICAL';
 
     /**
      * Make a grid builder.
@@ -31,20 +31,19 @@ class EnjazController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Candidate());
-        $grid->disableCreation();
 
         $grid->batchActions(function ($batch) {
-            $batch->add(new BatchSubmittedToEmbasy());
+            $batch->add(new BatchMusaned());
             $batch->add(new FailedBatch);
+            $batch->disableDelete();
         });
-
 
         $grid->quickSearch('name')->placeholder('Search by name');
 
         $grid->model()
             ->where([
-                'stage' => 'Enjaz'
-                ])->orderBy('updated_at', 'desc');
+                'stage' => 'Medical'
+            ])->orderBy('updated_at', 'desc');
 
 
 
@@ -87,7 +86,7 @@ class EnjazController extends AdminController
         $grid->column('dob', __('D.O.B'))->display(function ($x) {
             return Utils::my_date_1($x);
         })->hide();
-        $grid->column('phone_number', __('Phone number'))->hide();
+        $grid->column('phone_number', __('Phone number'));
         $grid->column('email', __('Email'))->hide();
         $grid->column('district_id', __('District id'))->hide();
         $grid->column('subcounty_id', __('Subcounty'))
@@ -139,27 +138,30 @@ class EnjazController extends AdminController
         $grid->column('registration_fee', __('Registration fee'))->hide();
         $grid->column('account', __('Account'))->hide();
         $grid->column('destination_country', __('Destination country'))->sortable();
-        $grid->column('job_type', __('Job type'))->hide();
+        $grid->column('job_type', __('Job type'));
         $grid->column('has_paid', __('Has paid'))->filter([
             'Yes' => 'Yes',
             'No' => 'No',
         ])->hide();
         $grid->column('stage', __('Stage'))->sortable();
 
+
+
+
         $grid->column('medical_hospital', __('Medical hospital'))->hide();
         $grid->column('medical_date', __('Medical date'))->hide();
         $grid->column('medical_status', __('Medical status'))->hide();
         $grid->column('musaned_status', __('Musaned status'))->hide();
         $grid->column('failed_reason', __('Failed reason'))->hide();
-        $grid->column('interpal_appointment_date', __('Interpal Appointment Date'))->sortable();
+        $grid->column('interpal_appointment_date', __('Interpal appointment date'))->hide();
         $grid->column('interpal_done', __('Interpal done'))->hide();
         $grid->column('interpal_status', __('Interpal status'))->hide();
         $grid->column('cv_sharing', __('Cv sharing'))->hide();
         $grid->column('cv_shared_with_partners', __('Cv shared with partners'))->hide();
         $grid->column('emis_upload', __('Emis upload'))->hide();
         $grid->column('on_training', __('On training'))->hide();
-        $grid->column('training_start_date', __('Training start date'));
-        $grid->column('training_end_date', __('Training end date'));
+        $grid->column('training_start_date', __('Training start date'))->hide();
+        $grid->column('training_end_date', __('Training end date'))->hide();
         $grid->column('ministry_aproval', __('Ministry aproval'))->hide();
         $grid->column('enjaz_applied', __('Enjaz applied'))->hide();
         $grid->column('enjaz_status', __('Enjaz status'))->hide();
@@ -265,20 +267,15 @@ class EnjazController extends AdminController
     {
         $form = new Form(new Candidate());
 
-        $form->radio('stage', __('Has this candidate been submitted to Embasy?'))
+
+        $form->radio('stage', __('Did this candidate pass  PRE GCC MEDICAL Checkup?'))
             ->options([
-                'Embasy' => 'Yes',
-                'Failed' => 'Failed at this level',
-            ])->when('Embasy', function ($form) {
+                'Musaned' => 'Yes',
+                'Failed' => 'Failed at this stage',
+            ])->when('Medical', function ($form) {
 
-                $form->hidden('ministry_aproval', __('Ministry'))
+                /*    $form->hidden('ministry_aproval', __('Ministry'))
                     ->default('Yes')
-                    ->rules('required');
-                /*
-                $form->date('training_start_date', __('Training start date'))
-                    ->rules('required');
-
-                $form->date('training_end_date', __('Training end date'))
                     ->rules('required'); */
             })
             ->when('Failed', function ($form) {
@@ -288,7 +285,6 @@ class EnjazController extends AdminController
                     ->rules('required');
             })
             ->rules('required');
-
 
         return $form;
     }

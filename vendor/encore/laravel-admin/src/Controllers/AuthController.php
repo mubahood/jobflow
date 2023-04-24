@@ -246,38 +246,17 @@ class AuthController extends Controller
 
         Utils::checkEventRegustration();
 
-        $form = new Form(new $class());
-        $form->html('<br>Dear respected member, thank you for your interest in the <b>ICT for Persons With Disabilities</b>. We
-        are seeking to create an national database for for Persons With Disabilities to enhance ways of
-        reaching out and supporting.
-        Please fill out this form to help us get to know you better.', '<br>NOTICE:');
-
+        $form = new Form(new $class()); 
 
         $form->divider('Bio information');
 
-        $form->radio('title', 'Title')
-            ->options([
-                'Mr' => 'Mr',
-                'Ms' => 'Ms',
-                'Mrs' => 'Mrs',
-                'Dr' => 'Dr',
-                'Prof' => 'Prof',
-                'Haji' => 'Haji',
-                'Hajjat' => 'Hajjat',
-                'Imam' => 'Imam',
-                'Shaykh' => 'Shaykh',
-                'Mufti' => 'Mufti',
-            ])
-            ->rules('required');
+ 
 
         $form->text('first_name', 'First name')->rules('required');
         $form->text('last_name', 'Last name')->rules('required');
         $form->radio('sex', 'Sex')->options(['Male' => 'Male', 'Female' => 'Female'])->rules('required');
         $form->date('dob', 'Date of birth');
-
-        $form->textarea('intro', 'Breifly Introduce yourself')->rules('required')
-            ->help('Write a very short bio about yourself'); 
-
+ 
  
  
 
@@ -285,12 +264,8 @@ class AuthController extends Controller
             ->help('Your country of origin')
             ->options(Utils::COUNTRIES())->rules('required');
 
-
-        $form->text('occupation', 'Occupation');
-
-        $form->quill('about', 'About you')->help('Write something about yourself.');
-
-
+ 
+ 
         $form->image('avatar', 'Porfile photo');
         $form->file('cv', 'CV File')->rules('mimes:doc,docx,pdf');
 

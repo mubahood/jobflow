@@ -29,6 +29,8 @@ class BatchChangeStage extends BatchAction
     {
         $this->select('stage', __('Stage'))
             ->options([
+                'Interview' => 'Interview',
+                'Medical' => 'PRE GCC MEDICAL',
                 'Musaned' => 'Musaned',
                 'Interpol' => 'Interpol',
                 'Shared CV' => 'Shared CV',

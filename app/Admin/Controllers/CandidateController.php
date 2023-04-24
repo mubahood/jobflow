@@ -164,9 +164,9 @@ class CandidateController extends AdminController
         $grid->column('depature_date', __('Depature date'))->hide();
         $grid->column('depature_comment', __('Depature comment'))->hide();
 
-        $grid->column('print', __('CV'))->display(function(){
-            $link = url('cv?id='.$this->id);
-            return '<a target="_blank" href="'.$link.'">PRINT CV</a>';
+        $grid->column('print', __('CV'))->display(function () {
+            $link = url('cv?id=' . $this->id);
+            return '<a target="_blank" href="' . $link . '">PRINT CV</a>';
         });
 
         return $grid;
@@ -348,16 +348,16 @@ class CandidateController extends AdminController
 
         $form->divider();
         if ($form->isEditing()) {
-            $form->select('stage', __('Stage'))
+           /*  $form->select('stage', __('Stage'))
                 ->options([
                     'Musaned' => 'Musaned',
                     'Interpol' => 'Interpol'
-                ])->rules('required');
+                ])->rules('required'); */
         } else {
             $form->select('stage', __('Stage'))
                 ->options([
-                    'Musaned' => 'Musaned'
-                ])->default('Medication')->rules('required');
+                    'Interview' => 'Interview'
+                ])->default('Interview')->rules('required');
         }
 
 

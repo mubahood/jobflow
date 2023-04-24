@@ -42,7 +42,7 @@ class SharedCvController extends AdminController
         $grid->model()
             ->where([
                 'stage' => 'Shared Cv'
-            ])->orderBy('id', 'desc');
+                ])->orderBy('updated_at', 'desc');
 
 
 

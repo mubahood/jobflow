@@ -38,12 +38,34 @@ class HomeController extends Controller
             $row->column(2, function (Column $column) {
                 $column->append(view('widgets.box-5', [
                     'is_dark' => false,
+                    'title' => 'INTERVIEW',
+                    'sub_title' => NULL,
+                    'number' => number_format(Candidate::where(['stage' => 'Interview'])->count()),
+                    'link' => 'interviews'
+                ]));
+            });
+
+            
+            $row->column(2, function (Column $column) {
+                $column->append(view('widgets.box-5', [
+                    'is_dark' => false,
+                    'title' => 'PRE GCC',
+                    'sub_title' => NULL,
+                    'number' => number_format(Candidate::where(['stage' => 'Medical'])->count()),
+                    'link' => 'medical'
+                ]));
+            });
+
+            $row->column(2, function (Column $column) {
+                $column->append(view('widgets.box-5', [
+                    'is_dark' => false,
                     'title' => 'MUSANED',
                     'sub_title' => NULL,
                     'number' => number_format(Candidate::where(['stage' => 'Musaned'])->count()),
                     'link' => 'musaned'
                 ]));
             });
+
             $row->column(2, function (Column $column) {
                 $column->append(view('widgets.box-5', [
                     'is_dark' => false,

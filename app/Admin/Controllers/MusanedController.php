@@ -40,7 +40,7 @@ class MusanedController extends AdminController
         $grid->model()
             ->where([
                 'stage' => 'Musaned'
-            ])->orderBy('id', 'desc');
+                ])->orderBy('updated_at', 'desc');
 
 
 
